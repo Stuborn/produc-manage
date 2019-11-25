@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns="http://www.springframework.org/schema/beans"
+
+
+
+           xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                       http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+">
+
+
+<!--Spring接管hibernate配置    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://47.102.199.222:3306/test"></property>
+        <property name="username" value="root"></property>
+        <property name="password" value="qaz123"></property>
+    </bean>-->
+
+
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="jdbcUrl" value="jdbc:mysql://47.102.199.222:3306/test"></property>
+        <property name="username" value="root"></property>
+        <property name="password" value="qaz123"></property>
+    </bean>
+    <!--SessionFactory-->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.connection.url">jdbc:mysql://47.102.199.222:3306/test</prop>
+                <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+            </props>
+        </property>
+        <property name="annotatedClasses">
+            <list>
+                <value>entity.UserClassEntity</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <!--测试-->
+    <bean name="registaction" class="action.regist" scope="prototype">
+        <property name="service" ref="registservice"></property>
+    </bean>
+    <bean name="registservice" class="service.product_service">
+        <property name="insert" ref="registdao"></property>
+    </bean>
+    <bean id="registdao" class="dao.insert">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+</beans>
